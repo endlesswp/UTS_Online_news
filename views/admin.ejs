@@ -1,0 +1,110 @@
+<div class="card">
+    <div class="card-body">
+      <form id="formNews" >
+        <div class="mb-3">
+            <label for="category" class="form-label">KATEGORI</label><br>
+            <select class="form-select" id="_category" name="category" aria-label="Default select example">
+                <option value="">Pilih kategory</option>
+                <% for(var i=0; i < categories.length; i++) { %>
+                <option value="<%= categories[i].idcategory %>"><%= categories[i].category %></option>
+                <% } %>
+            </select>
+        </div>
+          <div class="mb-3">
+            <label for="judul" class="form-label">Foto URL</label>
+            <input type="email" name="fotourl" class="form-control" id="foto" placeholder="Masukan URL FOTO Disini">
+          </div>
+          <div class="mb-3">
+            <label for="link" class="form-label">link</label>
+            <input type="email" name="link" class="form-control" id="link" placeholder="Masukan link Disini">
+          </div>
+          <div class="mb-3">
+            <label for="judul" class="form-label">News Title</label>
+            <input type="email" name="judul" class="form-control" id="judul" placeholder="Judul berita ketik disini">
+          </div>
+          <div class="mb-3">
+            <label for="cnt" class="form-label">Content</label>
+            <textarea name="contentz"  class="form-control" id="cnt" rows="3"></textarea>
+          </div>
+          <button type="button" id="saveBtn" class="btn btn-primary">SAVE</button>
+    </div>
+  </form>
+<br>
+    <div class="card-body">
+    <table class="table table-dark">
+        <thead>
+          <tr>
+            <th scope="col">#</th>
+            <th scope="col">Image</th>
+            <th scope="col">Category</th>
+            <th scope="col">Judul</th>
+            <th scope="col">Content</th>
+          </tr>
+        </thead>
+        <tbody>
+            <% for(var i=0; i < ncontent.length; i++) { %>
+          <tr>
+            <th scope="row"><% ncontent[i].idnews %></th>
+            <td><img src="<%= ncontent[i].imageurl+"?w=50&q=90" %>" class="img-fluid" alt="Responsive image"></td>
+            <td><%= ncontent[i].category %></td>
+            <td><%= ncontent[i].judul %></td>
+            <td><%= (ncontent[i].content).toString().length > 150 ?  (ncontent[i].content).toString().substring(0, 150 - 3) + "..." : 
+                (ncontent[i].content).toString(); %></td>
+          </tr>
+          <% } %>
+        </tbody>
+      </table>
+    </div>
+    <script>
+      $( document ).ready(function(e) {
+ $("#saveBtn").click(function(){
+    if($("#_category").val() == ""){
+      alert("Kategori tidak boleh kosong");
+
+    }else if($("#foto").val() == ""){
+      alert("URL foto tidak boleh kosong");
+    }else if($("#judul").val() == ""){
+      alert("judul tidak boleh kosong");
+    }else if($("#cnt").val() == ""){
+    alert("content tidak boleh kosong");
+  }else{
+          let formData1 = $('#formNews').serialize();
+  
+        $.ajax({ url: '/postNews',  
+                    data: formData1,
+                    cache: false,
+                    type: 'POST',
+                    beforeSend: function () { 
+                       
+                    },
+                    success: function(data){
+                      if(data.status == "sukses"){
+                        location.reload();
+                      }else{
+                        alert("gagal simpan data")
+                      }
+             }});
+  }
+           
+});
+});
+
+      /*
+e.preventDefault();
+
+        //get the action-url of the form
+        var actionurl = e.currentTarget.action;
+
+        //do your own request an handle the results
+        $.ajax({
+                url: actionurl,
+                type: 'post',
+                dataType: 'application/json',
+                data: $("#myform").serialize(),
+                success: function(data) {
+                    ... do something with the data...
+                }
+        });
+      */
+    </script>
+  </div>
